@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<level-00>
+  <level-01-a>
+    <level-02-a key="key-00" value="before value-00"/>
+    <level-02-a key="key-01" value="before value-01"/>
+    <level-02-a key="key-02" value="before value-02"/>
+    <level-02-a key="key-03">before value-03</level-02-a>
+    <level-02-a key="$(MyProperty)" value="xx$(MyProperty)xx" />
+  </level-01-a>
+  <level-01-b>
+    <level-02-b value="before value-04"/>
+    <level-02-c>before value-05</level-02-c>
+    <level-02-d>before value-06</level-02-d>
+    <level-02-e>before value-07</level-02-e>
+    <level-02-f>$(MyProperty)</level-02-f>
+  </level-01-b>
+  <replaceContentXml>
+  </replaceContentXml>
+  <replaceContentText>
+  </replaceContentText>  
+</level-00>

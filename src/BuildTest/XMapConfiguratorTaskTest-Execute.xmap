@@ -1,0 +1,8 @@
+﻿//appSettings/add[@key='key-00']/@value
+after value-00
+
+//appSettings/add[@key='key-01']/@value
+$(property01)
+
+//appSettings/add[@key='key-02']/@value
+$(property02)

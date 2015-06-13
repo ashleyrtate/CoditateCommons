@@ -1,0 +1,8 @@
+﻿<?xml version="1.0"?>
+<configuration>
+  <appSettings>
+    <add key="key-00" value="before value-00" />
+    <add key="key-01" value="before value-01" />
+    <add key="key-02" value="before value-02" />
+  </appSettings>
+</configuration>

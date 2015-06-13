@@ -1,0 +1,7 @@
+﻿# unquoted property value
+property01=after value-01
+
+ # comment line surrounded by empty lines
+
+# quoted property value
+property02="after value-02"

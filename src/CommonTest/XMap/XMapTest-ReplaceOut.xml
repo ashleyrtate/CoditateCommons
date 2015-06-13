@@ -1,0 +1,22 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<level-00>
+  <level-01-a>
+    <level-02-a key="key-00" value="after value-00" />
+    <level-02-a key="key-01" value="after value-01" />
+    <level-02-a key="key-02" value="my property value" />
+    <level-02-a key="key-03">after value-03</level-02-a>
+    <level-02-a key="my property value" value="xxmy property valuexx" />
+  </level-01-a>
+  <level-01-b>
+    <level-02-b value="after value-04" />
+    <level-02-c>after value-05</level-02-c>
+    <level-02-d>after value-06</level-02-d>
+    <level-02-e>
+    </level-02-e>
+    <level-02-f>my property value</level-02-f>
+  </level-01-b>
+  <replaceContentXml>
+    <inner>This includes Xml characters that will not be escaped</inner>
+  </replaceContentXml>
+  <replaceContentText>This includes Xml characters that will be escaped: 1 &amp; 1 &gt; 1</replaceContentText>
+</level-00>

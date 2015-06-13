@@ -1,0 +1,48 @@
+﻿
+# comment with no space in front
+ # comment with space in front
+# 
+#comment with no space after escape char
+## comment with two escape chars
+
+# Setting attribute values, selecting correct element by key attribute values
+//level-01-a/level-02-a[@key='key-00']/@value
+after value-00
+//level-01-a/level-02-a[@key='key-01']/@value 
+after value-01        
+
+# Setting attribute value to expandable property
+//level-01-a/level-02-a[@key='key-02']/@value
+$(MyProperty)
+
+# Setting element value, selecting correct element by key attribute value
+//level-01-a/level-02-a[@key='key-03']
+after value-03
+
+# Setting attribute value, no key attribute
+//level-01-b/level-02-b/@value
+after value-04
+
+# Setting element value, no key attribute
+//level-01-b/level-02-c
+after value-05
+
+# Path with extra whitespace
+    //level-01-b/level-02-d       
+    after value-06      
+    
+# Path with empty value
+//level-01-b/level-02-e
+
+
+# Xpath that resolves to no nodes
+//abc/xyz 
+node value
+
+# replace element content with text
+//replaceContentText
+This includes Xml characters that will be escaped: 1 & 1 > 1 
+
+# replace element content with Xml
+//replaceContentXml
+<inner>This includes Xml characters that will not be escaped</inner>
