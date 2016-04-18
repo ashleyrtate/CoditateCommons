@@ -1,0 +1,69 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!-- To use these targets simply include this file in your project file after any other includes. The typical
+     include line looks like this:
+     
+     <Import Project="$(MSBuildExtensionsPath)\Coditate\XMapConfigurator.targets"/>
+  -->
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+    <PropertyGroup>
+        <XMapping>Development</XMapping>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <XPropertyFiles Include="$(MSBuildStartupDirectory)\**\$(XMapping).xprop" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <XMapFiles Include="**\$(XMapping).xmap" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <ConfigFiles Include="**\*.config" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <DefaultConfigFiles Include="**\*.defaultconfig" />
+    </ItemGroup>
+
+    <!-- Import the task -->
+    <UsingTask AssemblyFile="Coditate.Build.dll"
+               TaskName="XMapConfiguratorTask" />
+
+    <!-- 
+		Re-define CleanDependsOn so that CleanConfiguration is called to remove generated config files before Clean target is called. 
+		
+		Re-define PrepareForBuildDependsOn to ensure UpdateConfiguration is called and the config files exist 
+		before the Build target is called. 
+	-->
+    <PropertyGroup>
+        <CleanDependsOn>
+            $(CleanDependsOn);
+            CleanConfiguration
+        </CleanDependsOn>	
+        <PrepareForBuildDependsOn>
+            $(PrepareForBuildDependsOn);
+            UpdateConfiguration
+        </PrepareForBuildDependsOn>
+    </PropertyGroup>
+
+	<Target Name="CleanConfiguration" >
+		<Delete Files="@(DefaultConfigFiles ->'%(Filename).config')" />
+	</Target>
+	
+    <!-- 
+		The UpdateConfiguration target that actually does all the work. The default config files (*.defaultconfig), Xmap files (*.xmap),
+		and XMap property files (*.xprop) are all defined as inputs to the target. Modifications to any of these files will 
+		cause the configuration (*.config) files to be updated.
+	-->
+    <Target Name="UpdateConfiguration"
+            Inputs="@(DefaultConfigFiles);@(XMapFiles);@(XPropertyFiles)"
+            Outputs="@(DefaultConfigFiles ->'%(Filename).config')" >
+
+        <XMapConfiguratorTask
+            DefaultConfigFiles="@(DefaultConfigFiles)"
+            XMapping="$(XMapping)" >
+
+        </XMapConfiguratorTask>
+    </Target>
+</Project>

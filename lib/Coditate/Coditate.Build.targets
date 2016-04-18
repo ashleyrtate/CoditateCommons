@@ -1,0 +1,100 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<!-- 
+    Includes common build targets that are 
+    
+        1) Used across multiple projects/solutions
+        2) Need to be invoked when the project is built in Visual Studio AND from the master build script.
+
+    The following line must be manually added to the .csproj file of any projects that need these targets:
+
+        <Import Project="..\..\..\lib\Coditate\Coditate.Build.targets" />
+
+-->
+
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+    <PropertyGroup>
+		<!-- 
+			Set install location for MSBuild Community Tasks
+		-->
+		<MSBuildCommunityTasksPath>.\</MSBuildCommunityTasksPath>
+		<!-- 
+			Set install location for MSBuild Extension Tasks
+		-->
+		<ExtensionTasksPath>.\</ExtensionTasksPath>
+		<!-- 
+		        Redefine PrepareForBuildDependsOn to include custom initialization targets.
+		-->
+        <PrepareForBuildDependsOn>
+            $(PrepareForBuildDependsOn);
+            GenerateCommonAssemblyInfo
+        </PrepareForBuildDependsOn>
+    </PropertyGroup>
+
+	<Import Project="XMapConfigurator.targets"/>
+    <Import Project="MSBuild.ExtensionPack.tasks"/>
+    <Import Project="MSBuild.Community.Tasks.Targets"/>
+	
+    <!-- 
+	    CopyWebApplication - Copies web application deployment files to 'build\$(SolutionName)' directory.
+  
+        todo: should support passing configurable destination directory to this target
+    -->
+    <Target Name="CopyWebApplication">
+        <ItemGroup>
+            <SiteFiles
+                Include="$(MSBuildProjectDirectory)\**\*.*"
+                Exclude="$(MSBuildProjectDirectory)\**\.svn\**;$(MSBuildProjectDirectory)\**\obj\**;$(MSBuildProjectDirectory)\**\*.cs;$(MSBuildProjectDirectory)\**\*.xmap;$(MSBuildProjectDirectory)\**\*.defaultconfig;$(MSBuildProjectDirectory)\**\*.csproj*" />
+        </ItemGroup>
+        <Copy
+            SourceFiles="@(SiteFiles)"
+            DestinationFiles="@(SiteFiles->'$(SolutionDir)..\..\build\$(SolutionName)\%(RecursiveDir)%(Filename)%(Extension)')"
+            SkipUnchangedFiles="true" />
+    </Target>
+
+    <!-- 
+        GenerateCommonAssemblyInfo - Generates CommmonAssemblyInfo.cs file in same folder as AssemblyInfo.cs file
+        if one exists under the current project root directory. 
+        
+        IMPORTANT: The generated file must be explicitly added to the Visual Studio project for this target
+        to actually affect the output assembly!
+  
+        SourceRevision property must be defaulted for when target is invoked within Visual Studio
+	    -->    
+    <PropertyGroup>
+        <SourceRevision>0</SourceRevision>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <AssemblyInfoFile Include="**\AssemblyInfo.cs" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <CommonAssemblyInfoFile Include="@(AssemblyInfoFile ->'%(RelativeDir)Common%(Filename)%(Extension)')" />
+    </ItemGroup>
+
+    <Target Name="GenerateCommonAssemblyInfo"
+            Condition="'@(CommonAssemblyInfoFile)' != ''"
+            Inputs="@(Compile)"
+            Outputs="@(CommonAssemblyInfoFile);@(IntermediateAssembly)" >
+
+        <Time>
+            <Output TaskParameter="Month"
+                    PropertyName="BuildMonth" />
+            <Output TaskParameter="Day"
+                    PropertyName="BuildDay" />
+            <Output TaskParameter="Year"
+                    PropertyName="BuildYear" />
+        </Time>
+
+        <MSBuild.Community.Tasks.AssemblyInfo CodeLanguage="CS"
+                      OutputFile="@(CommonAssemblyInfoFile -> '%(FullPath)')"
+                      AssemblyCompany="Coditate Software"
+                      AssemblyCopyright="Copyright © Coditate Software 2007-$(BuildYear)"
+                      AssemblyVersion="$(BuildYear).$(BuildMonth).$(BuildDay).$(SourceRevision)"
+                      AssemblyFileVersion="$(BuildYear).$(BuildMonth).$(BuildDay).$(SourceRevision)"
+                      ComVisible="false"/>
+    </Target>
+
+</Project>
